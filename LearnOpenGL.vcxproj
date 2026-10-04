@@ -31,6 +31,7 @@
   <ItemGroup>
     <None Include="src\CAGD_BSpline_Intersection\frag.glsl" />
     <None Include="src\CAGD_BSpline_Intersection\vert.glsl" />
+    <None Include="src\Chapter5\shaders\vertex.glsl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

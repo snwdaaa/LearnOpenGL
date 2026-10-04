@@ -27,9 +27,13 @@
     <ClCompile Include="src\CAGD_BSpline_Intersection\BSpline_Intersection.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="src\Chapter5\HelloTriangle.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\CAGD_BSpline_Intersection\vert.glsl" />
     <None Include="src\CAGD_BSpline_Intersection\frag.glsl" />
+    <None Include="src\Chapter5\shaders\vertex.glsl" />
   </ItemGroup>
 </Project>
