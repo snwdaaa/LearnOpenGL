@@ -4,12 +4,14 @@
 
 const char* vertexShaderSource = "#version 330 core\n"
 "layout (location = 0) in vec3 aPos;\n"
+"void main()\n"
 "{\n"
 "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
 "}\0";
 
 const char* fragmentShaderSource = "#version 330 core\n"
 "out vec4 FragColor;\n"
+"void main()\n"
 "{\n"
 "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
 "}\0";
@@ -26,7 +28,7 @@ void processInput(GLFWwindow* window) {
     }
 }
 
-void initializeBuffer() {
+void initializeBuffer(unsigned int &VBO) {
     // 테스트 정점 데이터
     float vertices[] = {
 	-0.5f, -0.5f, 0.0f,
@@ -34,14 +36,36 @@ void initializeBuffer() {
 	0.0f, 0.5f, 0.0f
     };
 
-    unsigned int VBO;
-
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 }
 
-void processShader() {
+unsigned int createShaderProgram(unsigned int* compiledShaders, const size_t &shadersCnt) {
+    // 프로그램 생성
+    unsigned int shaderProgram;
+    shaderProgram = glCreateProgram();
+
+    // 이전에 컴파일한 셰이더들 프로그램 객체에 붙이기
+    for (int i = 0; i < shadersCnt; ++i) {
+	glAttachShader(shaderProgram, compiledShaders[i]);
+    }
+    glLinkProgram(shaderProgram); // 셰이더 프로그램 링크
+
+    // 성공 여부 확인
+    int success;
+    char infoLog[512];
+    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+
+    if (!success) {
+	glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+	std::cout << "ERROR::SHADER::PROGRAM::LINK_FAILED\n" << infoLog << std::endl;
+    }
+
+    return shaderProgram;
+}
+
+unsigned int* processShader(size_t* shadersCnt) {
     // Vertex Shader 생성
     unsigned int vertexShader;
     vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -74,38 +98,15 @@ void processShader() {
 
     // 쉐이더 프로그램 실행
     unsigned int compiledShaders[] = {vertexShader, fragmentShader};
-    createShaderProgram(compiledShaders);
+    *shadersCnt = sizeof(compiledShaders) / sizeof(unsigned int);
+    return compiledShaders;
 }
 
-void createShaderProgram(unsigned int *compiledShaders) {
-    // 프로그램 생성
-    unsigned int shaderProgram;
-    shaderProgram = glCreateProgram();
-
-    // 이전에 컴파일한 셰이더들 프로그램 객체에 붙이기
-    int shadersCnt = sizeof(compiledShaders) / sizeof(unsigned int);
-    for (int i = 0; i < shadersCnt; ++i) {
-	glAttachShader(shaderProgram, compiledShaders[i]);
-    }
-    glLinkProgram(shaderProgram); // 셰이더 프로그램 링크
-
-    // 성공 여부 확인
-    int success;
-    char infoLog[512];
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-
-    if (!success) {
-	glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-	std::cout << "ERROR::SHADER::PROGRAM::LINK_FAILED\n" << infoLog << std::endl;
-    }
-
-    // 셰이더 프로그램 사용
-    glUseProgram(shaderProgram);
-
-    // 링크한 셰이더들 삭제
-    for (int i = 0; i < shadersCnt; ++i) {
-	glDeleteShader(compiledShaders[i]);
-    }
+void initializeVertexArray(unsigned int &VAO) {
+    glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
 }
 
 int main() {
@@ -138,10 +139,17 @@ int main() {
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     // 버퍼 설정
-    initializeBuffer();
+    unsigned int VBO;
+    initializeBuffer(VBO);
 
     // 쉐이더 생성 및 쉐이더 프로그램 실행
-    processShader();
+    size_t shadersCnt;
+    unsigned int *compiledShaders = processShader(&shadersCnt);
+    unsigned int shaderProgram = createShaderProgram(compiledShaders, shadersCnt);
+
+    // Vertex Array 설정
+    unsigned int VAO;
+    initializeVertexArray(VAO);
 
     // render loop
     while (!glfwWindowShouldClose(window)) {
@@ -152,8 +160,17 @@ int main() {
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT); // 컬러 버퍼 비우기
 
+	glUseProgram(shaderProgram);
+	glBindVertexArray(VAO);
+	glDrawArrays(GL_TRIANGLES, 0, 3);
+
 	glfwSwapBuffers(window);
 	glfwPollEvents();
+    }
+
+    // 링크한 셰이더들 삭제
+    for (int i = 0; i < shadersCnt; ++i) {
+	glDeleteShader(compiledShaders[i]);
     }
 
     glfwTerminate(); // GLFW 리소스 정리
