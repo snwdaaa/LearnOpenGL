@@ -28,17 +28,37 @@ void processInput(GLFWwindow* window) {
     }
 }
 
-void initializeBuffer(unsigned int &VBO) {
+// VBO, EBO 설정
+void initializeVBO(unsigned int &VBO) {
     // 테스트 정점 데이터
     float vertices[] = {
-	-0.5f, -0.5f, 0.0f,
+	0.5f, 0.5f, 0.0f,
 	0.5f, -0.5f, 0.0f,
-	0.0f, 0.5f, 0.0f
+	-0.5f, -0.5f, 0.0f,
+	-0.5f, 0.5f, 0.0f
     };
 
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+}
+
+void initializeEBO(unsigned int& EBO) {
+    unsigned int indices[] = {
+    0, 1, 3, // first triangle
+    1, 2, 3 //  second triangle
+    };
+
+    glGenBuffers(1, &EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+}
+
+// VAO 설정
+void initializeVertexArray(unsigned int& VAO) {
+    glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);
 }
 
 unsigned int createShaderProgram(unsigned int* compiledShaders, const size_t &shadersCnt) {
@@ -102,13 +122,6 @@ unsigned int* processShader(size_t* shadersCnt) {
     return compiledShaders;
 }
 
-void initializeVertexArray(unsigned int &VAO) {
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-}
-
 int main() {
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -138,18 +151,27 @@ int main() {
     // 윈도우-뷰포트 크기 동기화 콜백
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    // 버퍼 설정
+    // VAO 생성 & 바인딩 -> VBO + EBO -> glVertexAttribPointer 순서
+    // VAO 설정
+    unsigned int VAO;
+    initializeVertexArray(VAO);
+
+    // VBO 설정
     unsigned int VBO;
-    initializeBuffer(VBO);
+    initializeVBO(VBO);
+
+    // EBO 설정
+    unsigned int EBO;
+    initializeEBO(EBO);
 
     // 쉐이더 생성 및 쉐이더 프로그램 실행
     size_t shadersCnt;
     unsigned int *compiledShaders = processShader(&shadersCnt);
     unsigned int shaderProgram = createShaderProgram(compiledShaders, shadersCnt);
 
-    // Vertex Array 설정
-    unsigned int VAO;
-    initializeVertexArray(VAO);
+    // VBO, EBO -> VAO에 기록
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
 
     // render loop
     while (!glfwWindowShouldClose(window)) {
@@ -162,7 +184,8 @@ int main() {
 
 	glUseProgram(shaderProgram);
 	glBindVertexArray(VAO);
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
 
 	glfwSwapBuffers(window);
 	glfwPollEvents();
