@@ -1,7 +1,6 @@
 ﻿#include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include "shaders/ShaderReader.h"
-
+#include <learnopengl/shader_s.h>
 #include <array>
 
 // 창 크기 변경할 때마다 호출되는 콜백 함수
@@ -17,7 +16,7 @@ void processInput(GLFWwindow* window) {
 }
 
 // VBO 설정
-void initializeVBO(unsigned int& VBO, const std::array<float, 9>& vertices) {
+void initializeVBO(unsigned int& VBO, const std::array<float, 18>& vertices) {
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
@@ -27,68 +26,6 @@ void initializeVBO(unsigned int& VBO, const std::array<float, 9>& vertices) {
 void initializeVertexArray(unsigned int& VAO) {
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
-}
-
-unsigned int createShaderProgram(const std::array<unsigned int, 2>& compiledShaders) {
-    // 프로그램 생성
-    unsigned int shaderProgram;
-    shaderProgram = glCreateProgram();
-
-    // 이전에 컴파일한 셰이더들 프로그램 객체에 붙이기
-    for (unsigned int shader : compiledShaders) {
-	glAttachShader(shaderProgram, shader);
-    }
-    glLinkProgram(shaderProgram); // 셰이더 프로그램 링크
-
-    // 성공 여부 확인
-    int success;
-    char infoLog[512];
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-
-    if (!success) {
-	glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-	std::cout << "ERROR::SHADER::PROGRAM::LINK_FAILED\n" << infoLog << std::endl;
-    }
-
-    return shaderProgram;
-}
-
-void processShader(
-    const char* vertexShaderSrc,
-    const char* fragmentShaderSrc,
-    std::array<unsigned int, 2>& compiledShaders)
-{
-    // Vertex Shader 생성
-    unsigned int vertexShader;
-    vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexShaderSrc, NULL);
-    glCompileShader(vertexShader);
-
-    // 성공 여부 확인
-    int success;
-    char infoLog[512];
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-
-    if (!success) {
-	glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-	std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-    }
-
-    // Fragment Shader 생성
-    unsigned int fragmentShader;
-    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSrc, NULL);
-    glCompileShader(fragmentShader);
-
-    // 성공 여부 확인
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-
-    if (!success) {
-	glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-	std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
-    }
-
-    compiledShaders = { vertexShader, fragmentShader };
 }
 
 int main() {
@@ -124,29 +61,26 @@ int main() {
     unsigned int VAO, VBO;
 
     // 가운데 삼각형
-    std::array<float, 9> vertices = {
-	-0.5f, -0.5f, 0.0f,
-	 0.5f, -0.5f, 0.0f,
-	 0.0f,  0.5f, 0.0f
+    std::array<float, 18> vertices = {
+	// positions		// colors
+	-0.5f, -0.5f, 0.0f,	1.0f, 0.0f, 0.0f,   // bottom right
+	 0.5f, -0.5f, 0.0f,	0.0f, 1.0f, 0.0f,   // bottom left
+	 0.0f,  0.5f, 0.0f,	0.0f, 0.0f, 1.0f    // top
     };
 
     initializeVertexArray(VAO);
     initializeVBO(VBO, vertices);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    // 위치 attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0); // stride: 6 * sizeof(float)
     glEnableVertexAttribArray(0);
 
-    // 쉐이더 생성 및 쉐이더 프로그램 링크
-    std::array<unsigned int, 2> compiledShaders;
-    std::string vertexCode = readShaderFile("src/Chapter6/shaders/vertex.glsl");
-    std::string fragmentCode = readShaderFile("src/Chapter6/shaders/fragment.glsl");
-    processShader(vertexCode.c_str(), fragmentCode.c_str(), compiledShaders);
-    unsigned int shaderProgram = createShaderProgram(compiledShaders);
+    // 색상 attribute
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float))); // 처음 + 3 * sizeof(float)에서 시작
+    glEnableVertexAttribArray(1);
 
-    // 링크가 끝난 셰이더 객체는 더 이상 필요 없음
-    for (unsigned int shader : compiledShaders) {
-	glDeleteShader(shader);
-    }
+    // 셰이더
+    Shader ourShader("src/Chapter6/shaders/vertex.glsl", "src/Chapter6/shaders/fragment.glsl");
 
     // render loop
     while (!glfwWindowShouldClose(window)) {
@@ -157,7 +91,16 @@ int main() {
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT); // 컬러 버퍼 비우기
 
-	glUseProgram(shaderProgram);
+	ourShader.use();
+	// ourShader.setFloat("xOffset", 0.5); // Practice 2
+
+	//// 시간 지남에 따라 색상 점차 변하게 만들기
+	//float timeValue = glfwGetTime();
+	//float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
+	//// uniform을 사용하려면 셰이더 안에서 uniform 속성의 인덱스/위치를 찾아야 함
+	//int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
+	//glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+
 	glBindVertexArray(VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 	glBindVertexArray(0);
@@ -169,7 +112,6 @@ int main() {
     // 리소스 정리
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
-    glDeleteProgram(shaderProgram);
 
     glfwTerminate(); // GLFW 리소스 정리
     return 0;

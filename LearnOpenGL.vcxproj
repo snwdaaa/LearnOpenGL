@@ -40,7 +40,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="src\Chapter6\Shader.cpp" />
-    <ClInclude Include="src\Chapter6\shaders\ShaderReader.h" />
+    <ClInclude Include="includes\learnopengl\shader_s.h" />
     <ClCompile Include="src\glad.c" />
   </ItemGroup>
   <ItemGroup>
