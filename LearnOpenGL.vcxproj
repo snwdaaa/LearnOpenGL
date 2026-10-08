@@ -27,13 +27,28 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="src\Chapter5\HelloTriangle.cpp" />
+    <ClCompile Include="src\Chapter5\HelloTriangle.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="src\Chapter5\Practice1.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="src\Chapter5\Practice2.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="src\Chapter5\Practice3.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="src\Chapter6\Shader.cpp" />
+    <ClInclude Include="src\Chapter6\shaders\ShaderReader.h" />
     <ClCompile Include="src\glad.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\CAGD_BSpline_Intersection\frag.glsl" />
     <None Include="src\CAGD_BSpline_Intersection\vert.glsl" />
     <None Include="src\Chapter5\shaders\vertex.glsl" />
+    <None Include="src\Chapter6\shaders\fragment.glsl" />
+    <None Include="src\Chapter6\shaders\vertex.glsl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

@@ -30,10 +30,29 @@
     <ClCompile Include="src\Chapter5\HelloTriangle.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="src\Chapter5\Practice1.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Chapter5\Practice2.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Chapter5\Practice3.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Chapter6\Shader.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\CAGD_BSpline_Intersection\vert.glsl" />
     <None Include="src\CAGD_BSpline_Intersection\frag.glsl" />
     <None Include="src\Chapter5\shaders\vertex.glsl" />
+    <None Include="src\Chapter6\shaders\vertex.glsl" />
+    <None Include="src\Chapter6\shaders\fragment.glsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Chapter6\shaders\ShaderReader.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
