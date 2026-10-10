@@ -39,9 +39,13 @@
     <ClCompile Include="src\Chapter5\Practice3.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="src\Chapter6\Shader.cpp" />
+    <ClCompile Include="src\Chapter6\Shader.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClInclude Include="includes\learnopengl\shader_s.h" />
+    <ClCompile Include="src\Chapter7\Texture.cpp" />
     <ClCompile Include="src\glad.c" />
+    <ClInclude Include="includes\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\CAGD_BSpline_Intersection\frag.glsl" />
@@ -49,6 +53,12 @@
     <None Include="src\Chapter5\shaders\vertex.glsl" />
     <None Include="src\Chapter6\shaders\fragment.glsl" />
     <None Include="src\Chapter6\shaders\vertex.glsl" />
+    <None Include="src\Chapter7\shaders\fragment.glsl" />
+    <None Include="src\Chapter7\shaders\vertex.glsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="src\Chapter7\awesomeface.png" />
+    <Image Include="src\Chapter7\container.jpg" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

@@ -82,12 +82,13 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath) {
     // fragment shader
     fragment = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragment, 1, &fShaderCode, NULL);
+    glCompileShader(fragment);
 
     // fragment shader 오류 확인
     glGetShaderiv(fragment, GL_COMPILE_STATUS, &success);
     if (!success) {
 	glGetShaderInfoLog(fragment, 512, NULL, infoLog);
-	std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+	std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
     }
 
     // 셰이더 프로그램
