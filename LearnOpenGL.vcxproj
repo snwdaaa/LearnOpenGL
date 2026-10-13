@@ -205,7 +205,10 @@
     <ClCompile Include="src\Chapter7\Texture.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="src\Chapter8\Transform.cpp" />
+    <ClCompile Include="src\Chapter8\Transform.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="src\Chapter9\CoordinateSystem.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClInclude Include="includes\stb_image.h" />
   </ItemGroup>
@@ -330,6 +333,8 @@
     <None Include="src\Chapter7\shaders\vertex.glsl" />
     <None Include="src\Chapter8\shaders\fragment.glsl" />
     <None Include="src\Chapter8\shaders\vertex.glsl" />
+    <None Include="src\Chapter9\shaders\fragment.glsl" />
+    <None Include="src\Chapter9\shaders\vertex.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="src\Chapter7\awesomeface.png" />
