@@ -43,7 +43,16 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClInclude Include="includes\learnopengl\shader_s.h" />
-    <ClCompile Include="src\Chapter7\Texture.cpp" />
+    <ClCompile Include="src\Chapter7\Practice2.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="src\Chapter7\Practice3.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="src\Chapter7\Practice4.cpp" />
+    <ClCompile Include="src\Chapter7\Texture.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="src\glad.c" />
     <ClInclude Include="includes\stb_image.h" />
   </ItemGroup>

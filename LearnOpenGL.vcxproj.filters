@@ -42,6 +42,18 @@
     <ClCompile Include="src\Chapter6\Shader.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="src\Chapter7\Texture.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Chapter7\Practice2.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Chapter7\Practice3.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Chapter7\Practice4.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\CAGD_BSpline_Intersection\vert.glsl" />
@@ -49,10 +61,23 @@
     <None Include="src\Chapter5\shaders\vertex.glsl" />
     <None Include="src\Chapter6\shaders\vertex.glsl" />
     <None Include="src\Chapter6\shaders\fragment.glsl" />
+    <None Include="src\Chapter7\shaders\fragment.glsl" />
+    <None Include="src\Chapter7\shaders\vertex.glsl" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Chapter6\shaders\ShaderReader.h">
-      <Filter>소스 파일</Filter>
+    <ClInclude Include="includes\learnopengl\shader_s.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="includes\stb_image.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="src\Chapter7\awesomeface.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="src\Chapter7\container.jpg">
+      <Filter>리소스 파일</Filter>
+    </Image>
   </ItemGroup>
 </Project>
