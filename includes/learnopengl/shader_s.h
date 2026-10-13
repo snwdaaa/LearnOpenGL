@@ -10,6 +10,13 @@
 #include <sstream>
 #include <iostream>
 
+// 호출한 .cpp 파일이 있는 폴더 기준 상대경로 -> 절대경로 (실행 위치와 무관)
+inline std::string localPath(const char* sourceFile, const char* relative) {
+    std::string dir(sourceFile);
+    return dir.substr(0, dir.find_last_of("/\\") + 1) + relative;
+}
+#define LOCAL_PATH(relative) localPath(__FILE__, relative).c_str()
+
 class Shader {
 public:
     unsigned int ID; // 셰이더 프로그램 ID
