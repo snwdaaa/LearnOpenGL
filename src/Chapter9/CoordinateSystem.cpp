@@ -22,7 +22,7 @@ void processInput(GLFWwindow* window) {
 }
 
 // VBO, EBO 설정
-void initializeVBO(unsigned int& VBO, const std::array<float, 36>& vertices) {
+void initializeVBO(unsigned int& VBO, const std::array<float, 180>& vertices) {
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
@@ -105,6 +105,7 @@ int main() {
 
     // 뷰포트 설정
     glViewport(0, 0, 800, 600); // 왼쪽 아래 모서리 위치, 너비, 높이
+    glEnable(GL_DEPTH_TEST); // Depth Test 활성화
 
     // 윈도우-뷰포트 크기 동기화 콜백
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
@@ -112,14 +113,50 @@ int main() {
     // VAO 생성 & 바인딩 -> VBO -> glVertexAttribPointer 순서
     unsigned int VAO, VBO, EBO;
 
-    // 가운데 삼각형
-    std::array<float, 36> vertices = {
-	// positions	    // colors		// texture coords
-	0.5f, 0.5f, 0.0f,   1.0f, 0.0f, 0.0f,	1.0f, 1.0f, // top right
-	0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,	1.0f, 0.0f, // bottom right
-	-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,	0.0f, 0.0f, // bottom left
-	-0.5f, 0.5f, 0.0f,  1.0f, 1.0f, 0.0f,	0.0f, 1.0f  // top left
+    // 큐브 (36개 정점)
+    std::array<float, 180> vertices = {
+	// positions	      // texture coords
+	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+	 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
 
+	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+	-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+	-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+	 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+	 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+	-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
     };
 
     initializeVertexArray(VAO);
@@ -127,15 +164,11 @@ int main() {
     initializeEBO(EBO);
 
     // 위치 attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0); // stride: 6 * sizeof(float)
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0); // stride: 5 * sizeof(float)
     glEnableVertexAttribArray(0);
 
-    // 색상 attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float))); // 처음 + 3 * sizeof(float)에서 시작
-    glEnableVertexAttribArray(1);
-
-    // 텍스처 attribute
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float))); // 처음 + 6 * sizeof(float)에서 시작
+    // 텍스처 attribute (색상 attribute 없음)
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float))); // 처음 + 3 * sizeof(float)에서 시작
     glEnableVertexAttribArray(2);
 
     // 셰이더
@@ -157,9 +190,18 @@ int main() {
     ourShader.setInt("texture1", 0);
     ourShader.setInt("texture2", 1);
 
-    glm::mat4 trans = glm::mat4(1.0f);
-    unsigned int transformLoc = glGetUniformLocation(ourShader.ID, "transform");
-    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+    glm::vec3 cubePositions[] = {
+	glm::vec3(0.0f, 0.0f, 0.0f),
+	glm::vec3(2.0f, 5.0f, -15.0f),
+	glm::vec3(-1.5f, -2.2f, -2.5f),
+	glm::vec3(-3.8f, -2.0f, -12.3f),
+	glm::vec3(2.4f, -0.4f, -3.5f),
+	glm::vec3(-1.7f, 3.0f, -7.5f),
+	glm::vec3(1.3f, -2.0f, -2.5f),
+	glm::vec3(1.5f, 2.0f, -2.5f),
+	glm::vec3(1.5f, 0.2f, -1.5f),
+	glm::vec3(-1.3f, 1.0f, -1.5f)
+    };
 
     // render loop
     while (!glfwWindowShouldClose(window)) {
@@ -168,10 +210,34 @@ int main() {
 
 	// render
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT); // 컬러 버퍼 비우기
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // 컬러 버퍼 비우기
+
+	// 모델 행렬
+	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
+	// 뷰 행렬
+	glm::mat4 view = glm::mat4(1.0f);
+	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+	// 투영 행렬
+	glm::mat4 projection;
+	projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+	//int modelLoc = glGetUniformLocation(ourShader.ID, "model");
+	//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+	int viewLoc = glGetUniformLocation(ourShader.ID, "view");
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+	int projectionLoc = glGetUniformLocation(ourShader.ID, "projection");
+	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
 	glBindVertexArray(VAO);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	for (unsigned int i = 0; i < 10; i++) {
+	    glm::mat4 model = glm::mat4(1.0f);
+	    model = glm::translate(model, cubePositions[i]);
+	    float angle = 20.0f * i;
+	    model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+	    ourShader.setMat4("model", model);
+
+	    glDrawArrays(GL_TRIANGLES, 0, 36);
+	}
 	glBindVertexArray(0);
 
 	glfwSwapBuffers(window);
