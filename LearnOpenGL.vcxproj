@@ -29,6 +29,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="src\Chapter10\Camera.cpp" />
     <ClCompile Include="src\Chapter4\HelloWindow.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -208,7 +209,9 @@
     <ClCompile Include="src\Chapter8\Transform.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="src\Chapter9\CoordinateSystem.cpp" />
+    <ClCompile Include="src\Chapter9\CoordinateSystem.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="src\glad.c" />
     <ClInclude Include="includes\stb_image.h" />
   </ItemGroup>
@@ -326,6 +329,8 @@
     <None Include="includes\glm\gtx\wrap.inl" />
     <None Include="src\CAGD_BSpline_Intersection\frag.glsl" />
     <None Include="src\CAGD_BSpline_Intersection\vert.glsl" />
+    <None Include="src\Chapter10\shaders\fragment.glsl" />
+    <None Include="src\Chapter10\shaders\vertex.glsl" />
     <None Include="src\Chapter5\shaders\vertex.glsl" />
     <None Include="src\Chapter6\shaders\fragment.glsl" />
     <None Include="src\Chapter6\shaders\vertex.glsl" />

@@ -63,6 +63,12 @@
     <ClCompile Include="src\Chapter8\Transform.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="src\Chapter9\CoordinateSystem.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Chapter10\Camera.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\CAGD_BSpline_Intersection\vert.glsl" />
@@ -407,6 +413,10 @@
     </None>
     <None Include="src\Chapter8\shaders\fragment.glsl" />
     <None Include="src\Chapter8\shaders\vertex.glsl" />
+    <None Include="src\Chapter9\shaders\fragment.glsl" />
+    <None Include="src\Chapter9\shaders\vertex.glsl" />
+    <None Include="src\Chapter10\shaders\fragment.glsl" />
+    <None Include="src\Chapter10\shaders\vertex.glsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="includes\learnopengl\shader_s.h">
